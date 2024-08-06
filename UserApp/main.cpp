@@ -1,4 +1,4 @@
-#include "main.h"
+#include "user.h"
 
 Rfid rfid;
 BLE ble;
@@ -6,6 +6,11 @@ BLE ble;
 volatile int mode = 0;
 volatile bool rfid_flag = false;
 
+/**
+ * @brief 入口函数
+ * 
+ * @return int 
+ */
 int stm32_main(void)
 {
     ssd1306_Init(&hi2c1);

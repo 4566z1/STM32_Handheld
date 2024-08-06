@@ -1,5 +1,5 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef _USER_H_
+#define _USER_H_
 
 #include "bluetooth.h"
 #include "common_inc.h"
