@@ -23,16 +23,20 @@ int sign(const char* buf, const int& size)
 
 bool Rfid::read()
 {
-    RFID_READ_HEADER header = {{0}, 0, {0}, 0, {0}};
     char* command = const_cast<char*>("\x52\x46\x00\x00\x00\x22\x00\x00\x46");
-
-    // Read header
     USART2_SendData(reinterpret_cast<uint8_t*>(command), 9);
-    uint8_t* rxdata = USART2_GetReceivedData();
-    memcpy(&header, rxdata, sizeof(header));
-    USART2_ClearReceived();
 
-    if (header.ParamLength[1] / DATA_GROUP_LEN <= 0) return false;
+    uint8_t* rxdata = USART2_GetReceivedData();
+    uint16_t rxNum = USART2_GetReceivedNum();
+    if (!rxNum) return false;
+
+    RFID_READ_HEADER header = {{0}, 0, {0}, 0, {0}};
+
+    memcpy(&header, rxdata, sizeof(header));
+    if (header.ParamLength[1] / DATA_GROUP_LEN <= 0) {
+        USART2_ClearReceived();
+        return false;
+    }
 
     // Copy
     for (int i = 0; i < DATA_GROUP_LEN - 1; ++i) {
@@ -45,5 +49,7 @@ bool Rfid::read()
 
     sprintf(this->m_name, "%x", sign(this->m_data, DATA_GROUP_LEN + 1));
     sprintf(this->m_code, "%d", m_data[4]);
+
+    USART2_ClearReceived();
     return true;
 }
