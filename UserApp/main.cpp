@@ -2,6 +2,7 @@
 
 Rfid rfid;
 BLE ble;
+Server server;
 
 volatile int mode = 0;
 volatile bool rfid_flag = false;
