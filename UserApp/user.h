@@ -5,10 +5,10 @@
 #include "common_inc.h"
 #include "i2c.h"
 #include "rfid.h"
+#include "server.h"
 #include "ssd1306.h"
 
 extern "C" {
 #include "bsp_USART.h"
 }
-
 #endif

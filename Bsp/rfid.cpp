@@ -21,7 +21,7 @@ int sign(const char* buf, const int& size)
     return res;
 }
 
-bool Rfid::read()
+int Rfid::read()
 {
     char* command = const_cast<char*>("\x52\x46\x00\x00\x00\x22\x00\x00\x46");
     USART2_SendData(reinterpret_cast<uint8_t*>(command), 9);
@@ -31,25 +31,34 @@ bool Rfid::read()
     if (!rxNum) return false;
 
     RFID_READ_HEADER header = {{0}, 0, {0}, 0, {0}};
+    int num = 0;
 
     memcpy(&header, rxdata, sizeof(header));
-    if (header.ParamLength[1] / DATA_GROUP_LEN <= 0) {
+
+    num = header.ParamLength[1] / DATA_GROUP_LEN;
+    num = num > MAX_RFID_READ_LEN ? MAX_RFID_READ_LEN : num;
+    if (num <= 0) {
         USART2_ClearReceived();
-        return false;
+        return 0;
     }
 
-    // Copy
-    for (int i = 0; i < DATA_GROUP_LEN - 1; ++i) {
-        this->m_data[i] = *(rxdata + sizeof(header) + i);
+    // Copy rfid data
+    uint8_t* p = rxdata + sizeof(header);
+    for (int n = 0; n < num; n++) {
+        char data[DATA_GROUP_LEN + 1] = {0};
+        for (int i = 0; i < DATA_GROUP_LEN - 1; ++i) {
+            data[i] = *(p + i);
+        }
+        p += DATA_GROUP_LEN;
+
+        // Decode
+        memset(this->m_rfid_data[n].name, 0, 5);
+        memset(this->m_rfid_data[n].code, 0, 5);
+
+        sprintf(this->m_rfid_data[n].name, "%x", sign(data, DATA_GROUP_LEN + 1));
+        sprintf(this->m_rfid_data[n].code, "%d", data[4]);
     }
-
-    // Write str data
-    memset(this->m_name, 0, 5);
-    memset(this->m_code, 0, 5);
-
-    sprintf(this->m_name, "%x", sign(this->m_data, DATA_GROUP_LEN + 1));
-    sprintf(this->m_code, "%d", m_data[4]);
 
     USART2_ClearReceived();
-    return true;
+    return num;
 }

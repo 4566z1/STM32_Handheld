@@ -1,7 +1,13 @@
 #ifndef RFID_H
 #define RFID_H
 
-const int DATA_GROUP_LEN = 19;
+#define DATA_GROUP_LEN 19
+#define MAX_RFID_READ_LEN 10
+
+struct rfid_s {
+    char name[5] = {0};
+    char code[5] = {0};
+};
 
 class Rfid
 {
@@ -9,14 +15,13 @@ class Rfid
     explicit Rfid() {}
 
     // 主动盘存
-    const char* get_name() { return this->m_name; }
-    const char* get_code() { return this->m_code; }
-    bool read();
+    // const char* get_name() { return this->m_name; }
+    // const char* get_code() { return this->m_code; }
+    const rfid_s* get_data() { return m_rfid_data; }
+    int read();
 
    private:
-    char m_data[DATA_GROUP_LEN + 1] = {0};
-    char m_name[5] = {0};
-    char m_code[5] = {0};
+    rfid_s m_rfid_data[MAX_RFID_READ_LEN] = {0};
 };
 
 #endif
