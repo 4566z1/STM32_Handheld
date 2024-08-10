@@ -58,7 +58,7 @@ int stm32_main(void)
  */
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (GPIO_Pin == GPIO_PIN_1) {
+    if (GPIO_Pin == GPIO_PIN_9) {
         rfid_flag = true;
     } else if (GPIO_Pin == GPIO_PIN_4) {
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);

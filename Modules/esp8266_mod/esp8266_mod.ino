@@ -12,7 +12,7 @@ void product_edit(const String& name, const String& cate, bool is_add = true) {
   String payload;
 
   if (is_add) {
-    url = "http://" + host + "/api/product/v1.php";
+    url = "http://" + host + "/api/product/v1.pd:\HACK\HardwareProgram\STM32\Project\STM32_Warehouse\Modules\esp8266_mod\esp8266_mod.inohp";
     payload = "name=" + name + "&cate=" + cate;
   } else {
     url = "http://" + host + "/api/product/v2.php";
