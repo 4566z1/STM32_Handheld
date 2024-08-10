@@ -2,6 +2,7 @@
 
 Rfid rfid;
 BLE ble;
+Server server;
 
 volatile int mode = 0;
 volatile bool rfid_flag = false;
@@ -21,7 +22,11 @@ int stm32_main(void)
         // RFID
         if (rfid.read()) {
             if (rfid_flag) {
-                ble.send(rfid.get_name(), rfid.get_code(), (const int&)mode);
+                // 蓝牙发送
+                // ble.send(rfid.get_name(), rfid.get_code(), (const int&)mode);
+
+                // 服务器直接上传
+                !mode ? server.product_add(rfid.get_name(), rfid.get_code()) : server.product_del(rfid.get_name());
 
                 // 蜂鸣器
                 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);

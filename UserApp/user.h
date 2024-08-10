@@ -6,6 +6,7 @@
 #include "i2c.h"
 #include "rfid.h"
 #include "ssd1306.h"
+#include "server.h"
 
 extern "C" {
 #include "bsp_USART.h"
